@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
+using System.IO;
 using System.Text.RegularExpressions;
+using James_Company;
 using JCompany.Model;
 using JCompany.Properties;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
@@ -9,8 +11,10 @@ namespace JCompany
 {
     public partial class ItemStudio : Form
     {
+        public static ItemStudio instance;
         public ItemStudio()
         {
+            instance = this;
             InitializeComponent();
         }
 
@@ -40,7 +44,7 @@ namespace JCompany
         string unturnedDir => Settings.Default.UnturnedDir;
         string Icons => Path.Combine(unturnedDir, "Extras", "Icons");
         private string? _cacheThatShit;
-        string Workshop
+        public string Workshop
         {
             get
             {
@@ -120,7 +124,7 @@ namespace JCompany
             using FolderBrowserDialog dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Extractor.ExtractAll(dialog.SelectedPath, false, this);
+                Extractor.ExtractAll(dialog.SelectedPath, false);
             }
         }
 
@@ -129,7 +133,7 @@ namespace JCompany
             using FolderBrowserDialog dialog = new FolderBrowserDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                Extractor.ExtractAll(dialog.SelectedPath, true, this);
+                Extractor.ExtractAll(dialog.SelectedPath, true);
             }
 
         }
@@ -137,8 +141,11 @@ namespace JCompany
         public void AskClearList()
         {
             lv_Items.Items.Clear();
+            txt_datEditor.Text = "";
+            txt_engEditor.Text = "";
+            pxb_ItemIcon.ImageLocation = "";
         }
-
+        public HashSet<string> CanBeFiltered = new();
         internal void AskUpdateList(List<Model.Item> _items)
         {
             AskClearList();
@@ -164,22 +171,17 @@ namespace JCompany
             {
                 ListViewItem selected = lv_Items.SelectedItems[0];
 
-                if (selected != _active && _active != null && _activeItem != null)
-                {
-                    // put shit in here for adjusting prompting to save or whatever
-                    if (_activeItem.Modified)
-                    {
-
-                    }
-                }
+                // now i should really add something here to prompt the user guy to save the file if they havent saved it already,
+                // but that's on them if they fuck up lolz
 
                 Item Match = Extractor.Getitem(selected.Text, selected.SubItems[1].Text, selected.SubItems[2].Text, selected.Tag);
                 if (Match != null)
                 {
-                    ChangeText(Match);
-                    ChangeIcon(Match);
                     _active = selected;
                     _activeItem = Match;
+
+                    ChangeText(Match);
+                    ChangeIcon(Match);
                 }
             }
         }
@@ -245,7 +247,15 @@ namespace JCompany
         {
             changing = true;
             txt_datEditor.Text = File.ReadAllText(match.DatPath).Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
-            txt_engEditor.Text = match.EngPath != null ? File.ReadAllText(match.EngPath).Replace("\r\n", "\n").Replace("\n", Environment.NewLine) : "No English.dat available";
+            try
+            {
+                txt_engEditor.Text = match.EngPath != null ? File.ReadAllText(match.EngPath).Replace("\r\n", "\n").Replace("\n", Environment.NewLine) : "No English.dat available";
+
+            }
+            catch (FileNotFoundException)
+            {
+                txt_engEditor.Text = "No English.dat available";
+            }
 
             UpdateComments();
 
@@ -268,9 +278,10 @@ namespace JCompany
 
             string input = txt_datEditor.Text;
 
-            input.AddComments(_activeItem);
+            string js = input.AddComments(_activeItem);
 
-            txt_datEditor.Text = input;
+
+            txt_datEditor.Text = js;
 
 
             txt_datEditor.ReadOnly = false;
@@ -384,6 +395,8 @@ namespace JCompany
 
             SetNotModified();
             UpdateComments();
+
+            txt_Msg.Text = "Saved!!";
         }
 
 
@@ -402,7 +415,7 @@ namespace JCompany
             }
             else
             {
-                Extractor.ExtractAll(Path.Combine(unturnedDir, "Bundles", "Items"), false, this);
+                Extractor.ExtractAll(Path.Combine(unturnedDir, "Bundles", "Items"), false);
             }
         }
 
@@ -413,6 +426,109 @@ namespace JCompany
             txt_engEditor.Text = "";
 
             AskUpdateList(Extractor._items);
+        }
+        private HashSet<string> activeFilters = new HashSet<string>();
+
+        private void txt_SearchBox_TextChanged(object sender, EventArgs e)
+        {
+            lv_Items.Items.Clear();
+
+            string searchText = txt_SearchBox.Text.ToLower();
+            IEnumerable<Item> filtered = Extractor._items.Where(item =>
+                (string.IsNullOrEmpty(searchText) ||
+                 item.Id.ToLower().Contains(searchText) ||
+                 item.Type.ToLower().Contains(searchText) ||
+                 item.Name.ToLower().Contains(searchText)) &&
+                (activeFilters.Count == 0 || activeFilters.Contains(item.Type)));
+
+            foreach (Item item in filtered)
+            {
+                ListViewItem item2 = new ListViewItem(item.Id);
+                item2.SubItems.Add(item.Type);
+                item2.SubItems.Add(item.Name);
+
+                if (item.Overlap != null)
+                {
+                    item2.BackColor = Color.Red;
+                }
+                item2.Tag = item.DatPath;
+                lv_Items.Items.Add(item2);
+            }
+        }
+
+        private void btn_ScrambleGUID_Click(object sender, EventArgs e)
+        {
+            if (_active == null && _activeItem == null)
+            {
+                txt_Msg.Text = "No item selected!";
+                return;
+            }
+
+
+            if (_activeItem.SearchDat("GUID", out string? OLDGUID))
+            {
+                // me when i run a simple replace and hope it works
+
+                Guid guid = Guid.NewGuid();
+
+                _activeItem.ReplaceVal("GUID", guid.ToString());
+                ChangeText(_activeItem);
+            }
+        }
+
+        private void exportAllIconsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using FolderBrowserDialog folderBrowserDialog = new();
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                string outputFolder = folderBrowserDialog.SelectedPath;
+
+                Parallel.ForEach(Extractor._items, item =>
+                {
+
+                    string Iconname = $"{item.Name.Replace(" ", "_")}_{item.Id}";
+
+                    string iconfile = Icons + "\\" + Iconname + ".png";
+
+                    if (File.Exists(iconfile))
+                    {
+                        _ = Path.GetFileName(item.DatPath);
+
+                        if (File.Exists(iconfile))
+                        {
+                            string destinationFile = Path.Combine(outputFolder, item.Id + ".png");
+                            File.Copy(iconfile, destinationFile);
+                        }
+                    }
+                    else
+                    {
+                        string lonename = Path.GetFileName(item.DatPath);
+
+                        iconfile = Icons + "\\" + lonename.Replace(".dat", "").Trim() + $"_{item.Id}" + ".png";
+
+                        if (File.Exists(iconfile))
+                        {
+                            string destinationFile = Path.Combine(outputFolder, item.Id + ".png");
+                            File.Copy(iconfile, destinationFile, true);
+                        }
+                    }
+                });
+            }
+        }
+
+        private void clearListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lv_Items.Items.Clear();
+            txt_datEditor.Text = "";
+            txt_engEditor.Text = "";
+            pxb_ItemIcon.ImageLocation = "";
+
+        }
+
+        private void openPresetsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new PresetForm();
+            form.ShowDialog();
         }
     }
 }

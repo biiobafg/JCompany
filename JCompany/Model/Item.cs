@@ -25,7 +25,7 @@ namespace JCompany.Model
             if (this.SearchDat("Guid", out string? Tguid))
                 this.GUID = Tguid;
             if (this.SearchDat("Type", out string? Ttype))
-                Type = Ttype;
+                Type = Ttype.ToLower();
             if (this.SearchDat("ID", out string? Tid))
                 Id = Tid;
             if (this.SearchEng("Name", out string? Tname))

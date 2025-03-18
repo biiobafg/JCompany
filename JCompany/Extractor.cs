@@ -8,7 +8,7 @@ namespace JCompany
     public class Extractor
     {
         // now including caller as a way to instance it so i can ask it to be cleared is a bad way of doing this but again, i dont really care it works
-        internal static void ExtractAll(string selectedPath, bool ClearList, ItemStudio caller)
+        internal static void ExtractAll(string selectedPath, bool ClearList)
         {
             if (!Directory.Exists(selectedPath))
             {
@@ -46,6 +46,16 @@ namespace JCompany
                 }
             });
             List<Item> itemsToRemove = new List<Item>();
+            if (ItemStudio.instance.chk_ShouldIgnoreBuilding.Checked)
+            {
+                _items.RemoveAll(x => x.Type == "small" || x.Type == "medium" || x.Type == "large");
+            }
+            if (ItemStudio.instance.chk_IgnoreDialogue.Checked)
+            {
+                _items.RemoveAll(x => x.Type == "dialogue");
+            }
+
+
             Parallel.ForEach(_items, item =>
             {
                 // this is a very very poor fix, i dont really know what else to do for this since ghost items now exist from the Artist stuff in the unturned items/outfits directory.
@@ -77,8 +87,9 @@ namespace JCompany
             {
                 _items.Remove(item);
             }
+            
 
-            caller.AskUpdateList(_items);
+            ItemStudio.instance.AskUpdateList(_items);
         }
 
         public static List<Item> _items = new List<Item>();
