@@ -44,6 +44,7 @@
             toolsToolStripMenuItem = new ToolStripMenuItem();
             exportAllIconsToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator4 = new ToolStripSeparator();
+            chk_IgnoreDialogue = new ToolStripMenuItem();
             chk_ShouldIgnoreBuilding = new ToolStripMenuItem();
             btn_AutoComment = new ToolStripMenuItem();
             presetsToolStripMenuItem = new ToolStripMenuItem();
@@ -70,7 +71,6 @@
             txt_engEditor = new TextBox();
             contextMenuStrip1 = new ContextMenuStrip(components);
             txt_SearchBox = new TextBox();
-            chk_IgnoreDialogue = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             tp_1.SuspendLayout();
             tabControl1.SuspendLayout();
@@ -83,7 +83,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, toolsToolStripMenuItem, presetsToolStripMenuItem, settingsToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(1560, 24);
+            menuStrip1.Size = new Size(1522, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -97,56 +97,56 @@
             // addFolderToolStripMenuItem
             // 
             addFolderToolStripMenuItem.Name = "addFolderToolStripMenuItem";
-            addFolderToolStripMenuItem.Size = new Size(169, 22);
+            addFolderToolStripMenuItem.Size = new Size(180, 22);
             addFolderToolStripMenuItem.Text = "Add Folder";
             addFolderToolStripMenuItem.Click += addFolderToolStripMenuItem_Click;
             // 
             // loadFolderToolStripMenuItem
             // 
             loadFolderToolStripMenuItem.Name = "loadFolderToolStripMenuItem";
-            loadFolderToolStripMenuItem.Size = new Size(169, 22);
+            loadFolderToolStripMenuItem.Size = new Size(180, 22);
             loadFolderToolStripMenuItem.Text = "Load Folder";
             loadFolderToolStripMenuItem.Click += loadFolderToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(166, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // saveCurrentToolStripMenuItem
             // 
             saveCurrentToolStripMenuItem.Name = "saveCurrentToolStripMenuItem";
-            saveCurrentToolStripMenuItem.Size = new Size(169, 22);
+            saveCurrentToolStripMenuItem.Size = new Size(180, 22);
             saveCurrentToolStripMenuItem.Text = "Save Current";
             // 
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new Size(166, 6);
+            toolStripSeparator2.Size = new Size(177, 6);
             // 
             // clearListToolStripMenuItem
             // 
             clearListToolStripMenuItem.Name = "clearListToolStripMenuItem";
-            clearListToolStripMenuItem.Size = new Size(169, 22);
+            clearListToolStripMenuItem.Size = new Size(180, 22);
             clearListToolStripMenuItem.Text = "Clear List";
             clearListToolStripMenuItem.Click += clearListToolStripMenuItem_Click;
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new Size(166, 6);
+            toolStripSeparator3.Size = new Size(177, 6);
             // 
             // loadVanillaItemsToolStripMenuItem
             // 
             loadVanillaItemsToolStripMenuItem.Name = "loadVanillaItemsToolStripMenuItem";
-            loadVanillaItemsToolStripMenuItem.Size = new Size(169, 22);
+            loadVanillaItemsToolStripMenuItem.Size = new Size(180, 22);
             loadVanillaItemsToolStripMenuItem.Text = "Load Vanilla Items";
             loadVanillaItemsToolStripMenuItem.Click += loadVanillaItemsToolStripMenuItem_Click;
             // 
             // reloadAllAssetsToolStripMenuItem
             // 
             reloadAllAssetsToolStripMenuItem.Name = "reloadAllAssetsToolStripMenuItem";
-            reloadAllAssetsToolStripMenuItem.Size = new Size(169, 22);
+            reloadAllAssetsToolStripMenuItem.Size = new Size(180, 22);
             reloadAllAssetsToolStripMenuItem.Text = "Reload All Assets";
             reloadAllAssetsToolStripMenuItem.Click += reloadAllAssetsToolStripMenuItem_Click;
             // 
@@ -168,6 +168,15 @@
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
             toolStripSeparator4.Size = new Size(222, 6);
+            // 
+            // chk_IgnoreDialogue
+            // 
+            chk_IgnoreDialogue.Checked = true;
+            chk_IgnoreDialogue.CheckOnClick = true;
+            chk_IgnoreDialogue.CheckState = CheckState.Checked;
+            chk_IgnoreDialogue.Name = "chk_IgnoreDialogue";
+            chk_IgnoreDialogue.Size = new Size(225, 22);
+            chk_IgnoreDialogue.Text = "Ignore Dialogue";
             // 
             // chk_ShouldIgnoreBuilding
             // 
@@ -197,7 +206,7 @@
             // openPresetsToolStripMenuItem
             // 
             openPresetsToolStripMenuItem.Name = "openPresetsToolStripMenuItem";
-            openPresetsToolStripMenuItem.Size = new Size(143, 22);
+            openPresetsToolStripMenuItem.Size = new Size(180, 22);
             openPresetsToolStripMenuItem.Text = "Open Presets";
             openPresetsToolStripMenuItem.Click += openPresetsToolStripMenuItem_Click;
             // 
@@ -246,7 +255,7 @@
             lv_Items.Margin = new Padding(20);
             lv_Items.MultiSelect = false;
             lv_Items.Name = "lv_Items";
-            lv_Items.Size = new Size(389, 767);
+            lv_Items.Size = new Size(389, 812);
             lv_Items.TabIndex = 1;
             lv_Items.UseCompatibleStateImageBehavior = false;
             lv_Items.View = View.Details;
@@ -274,7 +283,7 @@
             tp_1.Location = new Point(4, 24);
             tp_1.Name = "tp_1";
             tp_1.Padding = new Padding(3);
-            tp_1.Size = new Size(745, 776);
+            tp_1.Size = new Size(707, 821);
             tp_1.TabIndex = 0;
             tp_1.Text = "Dat Editor";
             tp_1.UseVisualStyleBackColor = true;
@@ -286,7 +295,7 @@
             txt_datEditor.Multiline = true;
             txt_datEditor.Name = "txt_datEditor";
             txt_datEditor.ScrollBars = ScrollBars.Vertical;
-            txt_datEditor.Size = new Size(739, 770);
+            txt_datEditor.Size = new Size(701, 815);
             txt_datEditor.TabIndex = 0;
             txt_datEditor.WordWrap = false;
             txt_datEditor.TextChanged += txt_datEditor_TextChanged;
@@ -299,7 +308,7 @@
             tabControl1.Location = new Point(406, 27);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(753, 804);
+            tabControl1.Size = new Size(715, 849);
             tabControl1.TabIndex = 2;
             // 
             // panel1
@@ -313,9 +322,9 @@
             panel1.Controls.Add(txt_iconLocation);
             panel1.Controls.Add(pxb_ItemIcon);
             panel1.Controls.Add(txt_engEditor);
-            panel1.Location = new Point(1161, 27);
+            panel1.Location = new Point(1123, 27);
             panel1.Name = "panel1";
-            panel1.Size = new Size(387, 789);
+            panel1.Size = new Size(387, 834);
             panel1.TabIndex = 3;
             // 
             // btn_OpenIconLocation
@@ -363,7 +372,7 @@
             // txt_iconLocation
             // 
             txt_iconLocation.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            txt_iconLocation.Location = new Point(4, 410);
+            txt_iconLocation.Location = new Point(4, 455);
             txt_iconLocation.Name = "txt_iconLocation";
             txt_iconLocation.ReadOnly = true;
             txt_iconLocation.RightToLeft = RightToLeft.Yes;
@@ -374,7 +383,7 @@
             // 
             pxb_ItemIcon.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             pxb_ItemIcon.BackgroundImageLayout = ImageLayout.None;
-            pxb_ItemIcon.Location = new Point(3, 439);
+            pxb_ItemIcon.Location = new Point(3, 484);
             pxb_ItemIcon.Name = "pxb_ItemIcon";
             pxb_ItemIcon.Size = new Size(381, 347);
             pxb_ItemIcon.SizeMode = PictureBoxSizeMode.Zoom;
@@ -406,20 +415,11 @@
             txt_SearchBox.TabIndex = 5;
             txt_SearchBox.TextChanged += txt_SearchBox_TextChanged;
             // 
-            // chk_IgnoreDialogue
-            // 
-            chk_IgnoreDialogue.Checked = true;
-            chk_IgnoreDialogue.CheckOnClick = true;
-            chk_IgnoreDialogue.CheckState = CheckState.Checked;
-            chk_IgnoreDialogue.Name = "chk_IgnoreDialogue";
-            chk_IgnoreDialogue.Size = new Size(225, 22);
-            chk_IgnoreDialogue.Text = "Ignore Dialogue";
-            // 
             // ItemStudio
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1560, 828);
+            ClientSize = new Size(1522, 873);
             Controls.Add(txt_SearchBox);
             Controls.Add(panel1);
             Controls.Add(tabControl1);
@@ -427,6 +427,7 @@
             Controls.Add(menuStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
+            MinimumSize = new Size(1136, 683);
             Name = "ItemStudio";
             Text = "James Company";
             menuStrip1.ResumeLayout(false);
