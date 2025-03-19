@@ -247,15 +247,11 @@ namespace JCompany
         {
             changing = true;
             txt_datEditor.Text = File.ReadAllText(match.DatPath).Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
-            try
-            {
-                txt_engEditor.Text = match.EngPath != null ? File.ReadAllText(match.EngPath).Replace("\r\n", "\n").Replace("\n", Environment.NewLine) : "No English.dat available";
+                if (File.Exists(match.EngPath))
+                    txt_engEditor.Text = match.EngPath != null ? File.ReadAllText(match.EngPath).Replace("\r\n", "\n").Replace("\n", Environment.NewLine) : "No English.dat available";
+                else
+                    txt_engEditor.Text = "No English.dat available";
 
-            }
-            catch (FileNotFoundException)
-            {
-                txt_engEditor.Text = "No English.dat available";
-            }
 
             UpdateComments();
 
